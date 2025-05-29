@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import SMSInputForm from './components/SMSInputForm';
 import Dashboard from './components/Dashboard';
+import InvoiceForm from './components/InvoiceForm';
 import './App.css';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
       <p className="text-center">Backend says: {message}</p>
       <SMSInputForm />
       <Dashboard />
+      <InvoiceForm />
     </div>
   );
 }
