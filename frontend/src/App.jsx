@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import Login from './components/Login';
+import Register from './components/Register';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -9,35 +11,44 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 function App() {
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
+  const [showRegister, setShowRegister] = useState(false);
   const [smsInput, setSmsInput] = useState('');
   const [parsedData, setParsedData] = useState(null);
   const [error, setError] = useState(null);
   const [transactions, setTransactions] = useState([]);
   const [darkMode, setDarkMode] = useState(false);
 
-  // Fetch transactions on mount
+  // Fetch transactions on mount if authenticated
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/transactions');
-        setTransactions(response.data);
-      } catch (err) {
-        console.error('Error fetching transactions:', err);
-      }
-    };
-    fetchTransactions();
-  }, []);
+    if (token) {
+      localStorage.setItem('token', token);
+      fetchTransactions();
+    }
+  }, [token]);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/transactions', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTransactions(response.data);
+    } catch (err) {
+      console.error('Error fetching transactions:', err);
+      setError('Failed to fetch transactions');
+    }
+  };
 
   const handleParse = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/transactions/parse', {
-        sms: smsInput,
-      });
+      const response = await axios.post(
+        'http://localhost:3000/transactions/parse',
+        { sms: smsInput },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
       setParsedData(response.data);
       setError(null);
-      // Refresh transactions after parsing
-      const transactionsResponse = await axios.get('http://localhost:3000/transactions');
-      setTransactions(transactionsResponse.data);
+      fetchTransactions(); // Refresh transactions
     } catch (err) {
       console.error('Axios Error:', err);
       setError(err.message);
@@ -45,11 +56,18 @@ function App() {
     }
   };
 
-  // Toggle dark mode
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.body.classList.toggle('bg-dark');
     document.body.classList.toggle('text-white');
+  };
+
+  const handleLogout = () => {
+    setToken('');
+    localStorage.removeItem('token');
+    setTransactions([]);
+    setParsedData(null);
+    setError(null);
   };
 
   // Prepare data for daily chart
@@ -90,13 +108,42 @@ function App() {
     ],
   };
 
+  if (!token) {
+    return (
+      <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : ''}`}>
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            {showRegister ? (
+              <Register setToken={setToken} setShowRegister={setShowRegister} />
+            ) : (
+              <>
+                <Login setToken={setToken} />
+                <p className="text-center mt-3">
+                  Don't have an account?{' '}
+                  <button className="btn btn-link p-0" onClick={() => setShowRegister(true)}>
+                    Register
+                  </button>
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : ''}`}>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Smart Hustler Toolkit</h1>
-        <button className="btn btn-secondary" onClick={toggleDarkMode}>
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
-        </button>
+        <div>
+          <button className="btn btn-secondary me-2" onClick={toggleDarkMode}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+          <button className="btn btn-danger" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
       <div className="row">
         <div className="col-md-4">
