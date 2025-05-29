@@ -17,7 +17,10 @@ function InvoiceForm() {
   useEffect(() => {
     // Fetch invoices
     axios.get('http://localhost:8000/api/invoices/')
-      .then(response => setInvoices(response.data))
+      .then(response => {
+        console.log('Invoices:', response.data); // Log to verify id field
+        setInvoices(response.data);
+      })
       .catch(error => console.error('Error fetching invoices:', error));
   }, []);
 
@@ -41,6 +44,10 @@ function InvoiceForm() {
   };
 
   const handleDownloadPDF = async (invoiceId) => {
+    if (!invoiceId) {
+      setError('Invalid invoice ID');
+      return;
+    }
     try {
       const res = await axios.get(`http://localhost:8000/api/invoices/${invoiceId}/pdf/`, {
         responseType: 'blob'
@@ -54,6 +61,7 @@ function InvoiceForm() {
       document.body.removeChild(link);
     } catch (err) {
       console.error('Error downloading PDF:', err);
+      setError('Failed to download PDF');
     }
   };
 
@@ -128,7 +136,7 @@ function InvoiceForm() {
         </thead>
         <tbody>
           {invoices.map(invoice => (
-            <tr key={invoice.invoice_number}>
+            <tr key={invoice.id}>
               <td>{invoice.invoice_number}</td>
               <td>{invoice.client_name}</td>
               <td>KSh {invoice.amount}</td>

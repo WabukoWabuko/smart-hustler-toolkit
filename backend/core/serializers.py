@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Transaction, Category, Invoice
+from .models import Transaction, Category, Invoice, TaxReport
 
 # Serialize Category
 class CategorySerializer(serializers.ModelSerializer):
@@ -23,3 +23,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = ['invoice_number', 'client_name', 'client_email', 'amount', 'description', 'created_at']
+
+# Serialize TaxReport
+class TaxReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TaxReport
+        fields = ['id', 'period_start', 'period_end', 'total_income', 'tax_estimate', 'created_at']

@@ -31,3 +31,14 @@ class Invoice(models.Model):
 
     def __str__(self):
         return f"Invoice {self.invoice_number} - {self.client_name}"
+
+# TaxReport model for KRA turnover tax
+class TaxReport(models.Model):
+    period_start = models.DateField()
+    period_end = models.DateField()
+    total_income = models.DecimalField(max_digits=12, decimal_places=2)
+    tax_estimate = models.DecimalField(max_digits=12, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Tax Report {self.period_start} to {self.period_end}"

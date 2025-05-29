@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tax Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .header { text-align: center; }
+        .details { margin-top: 20px; }
+        .details p { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Smart Hustler Toolkit</h1>
+        <h2>Tax Report</h2>
+    </div>
+    <div class="details">
+        <p><strong>Period:</strong> {{ period_start }} to {{ period_end }}</p>
+        <p><strong>Total Income:</strong> KSh {{ total_income }}</p>
+        <p><strong>Tax Estimate (3%):</strong> KSh {{ tax_estimate }}</p>
+        <p><strong>Generated:</strong> {{ created_at }}</p>
+    </div>
+</body>
+</html>

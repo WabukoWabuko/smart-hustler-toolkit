@@ -5,8 +5,10 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from .utils import parse_mpesa_sms
-from .models import Transaction, Invoice
-from .serializers import TransactionSerializer, InvoiceSerializer
+from .models import Transaction, Invoice, TaxReport
+from .serializers import TransactionSerializer, InvoiceSerializer, TaxReportSerializer
+from django.db.models import Sum
+from datetime import datetime
 
 # Test endpoint
 class TestAPIView(APIView):
@@ -61,7 +63,7 @@ class InvoiceAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Generate and download invoice PDF
+# Generate invoice PDF
 class InvoicePDFAPIView(APIView):
     def get(self, request, invoice_id):
         try:
@@ -82,5 +84,60 @@ class InvoicePDFAPIView(APIView):
         
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="invoice_{invoice.invoice_number}.pdf"'
+        response.write(pdf)
+        return response
+
+# Create and fetch tax reports
+class TaxReportAPIView(APIView):
+    def get(self, request):
+        reports = TaxReport.objects.all()
+        serializer = TaxReportSerializer(reports, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        start_date = request.data.get('start_date')
+        end_date = request.data.get('end_date')
+        if not start_date or not end_date:
+            return Response({"error": "Start and end dates are required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')
+            end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        except ValueError:
+            return Response({"error": "Invalid date format (use YYYY-MM-DD)"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        transactions = Transaction.objects.filter(date__range=[start_date, end_date])
+        total_income = transactions.aggregate(Sum('amount'))['amount__sum'] or 0
+        tax_estimate = total_income * 0.03  # 3% turnover tax
+        
+        report = TaxReport.objects.create(
+            period_start=start_date,
+            period_end=end_date,
+            total_income=total_income,
+            tax_estimate=tax_estimate
+        )
+        serializer = TaxReportSerializer(report)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+# Generate tax report PDF
+class TaxReportPDFAPIView(APIView):
+    def get(self, request, report_id):
+        try:
+            report = TaxReport.objects.get(id=report_id)
+        except TaxReport.DoesNotExist:
+            return Response({"error": "Tax report not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        html_string = render_to_string('tax_report_template.html', {
+            'period_start': report.period_start,
+            'period_end': report.period_end,
+            'total_income': report.total_income,
+            'tax_estimate': report.tax_estimate,
+            'created_at': report.created_at
+        })
+        html = HTML(string=html_string)
+        pdf = html.write_pdf()
+        
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="tax_report_{report.id}.pdf"'
         response.write(pdf)
         return response

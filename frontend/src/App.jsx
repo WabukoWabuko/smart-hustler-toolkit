@@ -4,6 +4,7 @@ import axios from 'axios';
 import SMSInputForm from './components/SMSInputForm';
 import Dashboard from './components/Dashboard';
 import InvoiceForm from './components/InvoiceForm';
+import TaxReportForm from './components/TaxReportForm';
 import './App.css';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <SMSInputForm />
       <Dashboard />
       <InvoiceForm />
+      <TaxReportForm />
     </div>
   );
 }
