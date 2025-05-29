@@ -21,35 +21,38 @@ function Register({ setToken, setShowRegister }) {
   };
 
   return (
-    <div className="card p-4">
-      <h3>Register</h3>
-      <div className="mb-3">
-        <label className="form-label">Username</label>
-        <input
-          type="text"
-          className="form-control"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Choose a username"
-        />
+    <div className="auth-container">
+      <div className="card p-4 shadow-lg auth-card">
+        <h3 className="text-center mb-4">Create Your Account</h3>
+        <p className="text-center text-muted mb-4">Join Smart Hustler Toolkit to track your finances</p>
+        <div className="mb-3">
+          <label className="form-label fw-bold">Username</label>
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Choose a username"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="form-label fw-bold">Password</label>
+          <input
+            type="password"
+            className="form-control form-control-lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Choose a password"
+          />
+        </div>
+        <button className="btn btn-primary btn-lg w-100 mb-3" onClick={handleRegister}>
+          Register
+        </button>
+        <button className="btn btn-outline-secondary btn-lg w-100" onClick={() => setShowRegister(false)}>
+          Back to Login
+        </button>
+        {error && <p className="text-danger text-center mt-3">{error}</p>}
       </div>
-      <div className="mb-3">
-        <label className="form-label">Password</label>
-        <input
-          type="password"
-          className="form-control"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Choose a password"
-        />
-      </div>
-      <button className="btn btn-primary me-2" onClick={handleRegister}>
-        Register
-      </button>
-      <button className="btn btn-secondary" onClick={() => setShowRegister(false)}>
-        Back to Login
-      </button>
-      {error && <p className="text-danger mt-3">{error}</p>}
     </div>
   );
 }

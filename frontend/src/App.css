@@ -67,3 +67,61 @@ pre.bg-dark {
   height: 300px; /* Fixed height for charts */
   overflow: hidden; /* Prevent content from overflowing */
 }
+
+/* Auth Page Styles */
+.auth-page {
+  background: linear-gradient(135deg, #e6f0fa 0%, #f8f9fa 100%);
+}
+
+.auth-page.bg-dark {
+  background: linear-gradient(135deg, #343a40 0%, #495057 100%);
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  max-width: 400px;
+  width: 100%;
+  border: none;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+}
+
+.auth-card:hover {
+  transform: translateY(-5px);
+}
+
+.form-control-lg {
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s ease;
+}
+
+.form-control-lg:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+.btn-primary, .btn-outline-secondary {
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}

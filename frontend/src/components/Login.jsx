@@ -15,37 +15,40 @@ function Login({ setToken }) {
       setToken(response.data.access_token);
       setError(null);
     } catch (err) {
-      setError('Invalid credentials');
+      setError('Invalid username or password');
     }
   };
 
   return (
-    <div className="card p-4">
-      <h3>Login</h3>
-      <div className="mb-3">
-        <label className="form-label">Username</label>
-        <input
-          type="text"
-          className="form-control"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Enter username"
-        />
+    <div className="auth-container">
+      <div className="card p-4 shadow-lg auth-card">
+        <h3 className="text-center mb-4">Welcome Back!</h3>
+        <p className="text-center text-muted mb-4">Log in to manage your M-Pesa transactions</p>
+        <div className="mb-3">
+          <label className="form-label fw-bold">Username</label>
+          <input
+            type="text"
+            className="form-control form-control-lg"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter your username"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="form-label fw-bold">Password</label>
+          <input
+            type="password"
+            className="form-control form-control-lg"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
+          />
+        </div>
+        <button className="btn btn-primary btn-lg w-100 mb-3" onClick={handleLogin}>
+          Log In
+        </button>
+        {error && <p className="text-danger text-center mt-3">{error}</p>}
       </div>
-      <div className="mb-3">
-        <label className="form-label">Password</label>
-        <input
-          type="password"
-          className="form-control"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password"
-        />
-      </div>
-      <button className="btn btn-primary" onClick={handleLogin}>
-        Login
-      </button>
-      {error && <p className="text-danger mt-3">{error}</p>}
     </div>
   );
 }

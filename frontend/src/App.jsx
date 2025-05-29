@@ -110,9 +110,9 @@ function App() {
 
   if (!token) {
     return (
-      <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : ''}`}>
-        <div className="row justify-content-center">
-          <div className="col-md-6">
+      <div className={`auth-page ${darkMode ? 'bg-dark text-white' : 'bg-light'}`}>
+        <div className="container d-flex justify-content-center align-items-center min-vh-100">
+          <div className="col-md-4">
             {showRegister ? (
               <Register setToken={setToken} setShowRegister={setShowRegister} />
             ) : (
@@ -121,7 +121,7 @@ function App() {
                 <p className="text-center mt-3">
                   Don't have an account?{' '}
                   <button className="btn btn-link p-0" onClick={() => setShowRegister(true)}>
-                    Register
+                    Register here
                   </button>
                 </p>
               </>
