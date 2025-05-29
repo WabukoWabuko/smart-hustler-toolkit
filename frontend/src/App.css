@@ -64,7 +64,8 @@ pre.bg-dark {
 
 .chart-container {
   position: relative;
-  height: 300px; /* Fixed height for charts */
+  height: 400px; /* Match the height set in App.jsx */
+  width: 100%;
   overflow: hidden; /* Prevent content from overflowing */
 }
 
