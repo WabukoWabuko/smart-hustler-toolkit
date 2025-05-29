@@ -99,7 +99,7 @@ function App() {
         </button>
       </div>
       <div className="row">
-        <div className="col-md-6">
+        <div className="col-md-4">
           <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Paste M-Pesa SMS</h3>
             <textarea
@@ -126,52 +126,64 @@ function App() {
             )}
           </div>
         </div>
-        <div className="col-md-6">
-          <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
-            <h3>Daily Transactions</h3>
-            <Line
-              data={dailyChartData}
-              options={{
-                responsive: true,
-                plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
-              }}
-            />
-          </div>
-          <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
-            <h3>Monthly Transactions</h3>
-            <Line
-              data={monthlyChartData}
-              options={{
-                responsive: true,
-                plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
-              }}
-            />
+        <div className="col-md-8">
+          <div className="row">
+            <div className="col-12 col-lg-6">
+              <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+                <h3>Daily Transactions</h3>
+                <Line
+                  data={dailyChartData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
+                  }}
+                  height={300}
+                />
+              </div>
+            </div>
+            <div className="col-12 col-lg-6">
+              <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+                <h3>Monthly Transactions</h3>
+                <Line
+                  data={monthlyChartData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
+                  }}
+                  height={300}
+                />
+              </div>
+            </div>
           </div>
           <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Transaction History</h3>
             {transactions.length > 0 ? (
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Amount (Ksh)</th>
-                    <th>Sender</th>
-                    <th>Transaction Code</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((tx) => (
-                    <tr key={tx.id}>
-                      <td>{new Date(tx.date).toLocaleDateString('en-GB')}</td>
-                      <td>{tx.type}</td>
-                      <td>{tx.amount.toFixed(2)}</td>
-                      <td>{tx.sender}</td>
-                      <td>{tx.transactionCode}</td>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Type</th>
+                      <th>Amount (Ksh)</th>
+                      <th>Sender</th>
+                      <th>Transaction Code</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {transactions.map((tx) => (
+                      <tr key={tx.id}>
+                        <td>{new Date(tx.date).toLocaleDateString('en-GB')}</td>
+                        <td>{tx.type}</td>
+                        <td>{tx.amount.toFixed(2)}</td>
+                        <td>{tx.sender}</td>
+                        <td>{tx.transactionCode}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <p>No transactions yet. Parse an SMS to add one!</p>
             )}
