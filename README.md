@@ -1,32 +1,38 @@
-Smart Hustler Toolkit
-A mobile-first expense and invoice manager for Kenyan freelancers and small business owners. Features M-Pesa SMS parsing, expense tracking, invoice generation, and tax reporting.
-🚀 Tech Stack
+# Smart Hustler Toolkit
 
-Frontend: React (Vite), Bootstrap
-Backend: Node.js, NestJS
-Database: SQLite (MVP), PostgreSQL (planned)
-Deployment: Vercel (planned)
+Yo, welcome to the **Smart Hustler Toolkit**—a mobile-first expense and invoice manager built for Kenyan freelancers and small business owners. It parses M-Pesa SMS, tracks expenses, generates invoices, and preps tax reports. Built with 💪 Django, React, Bootstrap, and SQLite3.
 
-📂 Project Structure
-smart-hustler-toolkit/
-├── frontend/       # React + Vite + Bootstrap
-├── backend/        # NestJS + SQLite
-└── README.md
+## Why This Exists
+- Solves real problems: M-Pesa transaction tracking, invoicing, and KRA tax compliance.
+- Shows off full-stack skills: backend APIs, frontend UI, and mobile-first design.
+- Portfolio gold: unique, practical, and locally relevant.
 
-🛠️ Setup Instructions
+## Setup Instructions
+1. **Backend (Django)**:
+   ```bash
+   python -m venv env
+   source env/bin/activate  # On Windows: env\Scripts\activate
+   pip install -r requirements.txt
+   cd backend
+   python manage.py migrate
+   python manage.py runserver
+   ```
+2. **Frontend (React)**:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+3. Open `http://localhost:5173` and see the magic.
 
-Clone the repo: git clone https://github.com/YOUR_USERNAME/smart-hustler-toolkit.git
-Install frontend dependencies: cd frontend && npm install
-Install backend dependencies: cd backend && npm install
-Run frontend: cd frontend && npm run dev
-Run backend: cd backend && npm run start:dev
+## Tech Stack
+- **Backend**: Django, Django REST Framework, SQLite3
+- **Frontend**: React (Vite), Bootstrap, Axios
+- **DevOps**: Git, GitHub (more to come)
 
-📈 Next Steps
+## Next Steps
+- Phase 2: Build the M-Pesa SMS parsing engine.
+- Stay tuned for more guru-level features!
 
-Build M-Pesa SMS parsing engine.
-Create dashboard UI for transactions.
-Deploy to Vercel.
-
-📸 Screenshots
-(To be added after UI is built)
-
+---
+Built with 🔥 by a coder who gets it.
