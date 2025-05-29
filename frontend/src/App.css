@@ -83,6 +83,10 @@ pre.bg-dark {
   align-items: center;
 }
 
+.auth-wrapper {
+  text-align: center;
+}
+
 .auth-card {
   max-width: 400px;
   width: 100%;
@@ -124,4 +128,16 @@ pre.bg-dark {
 .btn-outline-secondary:hover {
   background-color: #6c757d;
   color: #fff;
+}
+
+.auth-link {
+  color: #007bff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.auth-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }

@@ -112,19 +112,21 @@ function App() {
     return (
       <div className={`auth-page ${darkMode ? 'bg-dark text-white' : 'bg-light'}`}>
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
-          <div className="col-md-4">
+          <div className="col-md-4 auth-wrapper">
             {showRegister ? (
               <Register setToken={setToken} setShowRegister={setShowRegister} />
             ) : (
-              <>
+              <div>
                 <Login setToken={setToken} />
-                <p className="text-center mt-3">
-                  Don't have an account?{' '}
-                  <button className="btn btn-link p-0" onClick={() => setShowRegister(true)}>
-                    Register here
-                  </button>
-                </p>
-              </>
+                <div className="text-center mt-4">
+                  <p className="mb-0">
+                    Don't have an account?{' '}
+                    <button className="btn btn-link p-0 auth-link" onClick={() => setShowRegister(true)}>
+                      Register here
+                    </button>
+                  </p>
+                </div>
+              </div>
             )}
           </div>
         </div>
