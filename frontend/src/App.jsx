@@ -112,7 +112,7 @@ function App() {
     return (
       <div className={`auth-page ${darkMode ? 'bg-dark text-white' : 'bg-light'}`}>
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
-          <div className="col-md-4 auth-wrapper">
+          <div className="auth-wrapper">
             {showRegister ? (
               <Register setToken={setToken} setShowRegister={setShowRegister} />
             ) : (
@@ -147,8 +147,9 @@ function App() {
           </button>
         </div>
       </div>
-      <div className="row">
-        <div className="col-md-4">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-10">
+          {/* SMS Input Section */}
           <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Paste M-Pesa SMS</h3>
             <textarea
@@ -174,11 +175,11 @@ function App() {
               </div>
             )}
           </div>
-        </div>
-        <div className="col-md-8">
+
+          {/* Charts Section */}
           <div className="row">
-            <div className="col-12 col-lg-6">
-              <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+            <div className="col-12 col-md-6 mb-4">
+              <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
                 <h3>Daily Transactions</h3>
                 <div className="chart-container">
                   <Line
@@ -193,8 +194,8 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="col-12 col-lg-6">
-              <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+            <div className="col-12 col-md-6 mb-4">
+              <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
                 <h3>Monthly Transactions</h3>
                 <div className="chart-container">
                   <Line
@@ -210,6 +211,8 @@ function App() {
               </div>
             </div>
           </div>
+
+          {/* Transaction History Section */}
           <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Transaction History</h3>
             {transactions.length > 0 ? (

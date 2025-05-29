@@ -84,7 +84,10 @@ pre.bg-dark {
 }
 
 .auth-wrapper {
+  max-width: 400px;
+  width: 100%;
   text-align: center;
+  margin: 0 auto;
 }
 
 .auth-card {
