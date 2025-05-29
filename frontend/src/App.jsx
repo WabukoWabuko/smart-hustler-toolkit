@@ -1,59 +1,38 @@
 import { useState } from 'react';
-import axios from 'axios';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const [smsText, setSmsText] = useState('');
-  const [transaction, setTransaction] = useState(null);
-  const [error, setError] = useState(null);
+  const [smsInput, setSmsInput] = useState('');
+  const [parsedData, setParsedData] = useState(null);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('http://localhost:3000/transactions/parse', { sms: smsText });
-      setTransaction(response.data);
-      setError(null);
-    } catch (err) {
-      setError(err.response?.data?.message || 'Error parsing SMS');
-      setTransaction(null);
-    }
+  const handleParse = () => {
+    // Placeholder for SMS parsing logic
+    setParsedData({ message: 'Parsing not implemented yet!' });
   };
 
   return (
     <div className="container mt-5">
-      <h1>Smart Hustler Toolkit</h1>
-      <form onSubmit={handleSubmit} className="mb-4">
-        <div className="mb-3">
-          <label htmlFor="smsInput" className="form-label">
-            Enter M-Pesa SMS
-          </label>
-          <textarea
-            id="smsInput"
-            className="form-control"
-            rows="4"
-            value={smsText}
-            onChange={(e) => setSmsText(e.target.value)}
-            placeholder="e.g., QJ12345678 Confirmed. You have received Ksh1,000.00 from JOHN DOE..."
-          ></textarea>
-        </div>
-        <button type="submit" className="btn btn-primary">
+      <h1 className="text-center mb-4">Smart Hustler Toolkit</h1>
+      <div className="card p-4">
+        <h3>Paste M-Pesa SMS</h3>
+        <textarea
+          className="form-control mb-3"
+          rows="4"
+          value={smsInput}
+          onChange={(e) => setSmsInput(e.target.value)}
+          placeholder="Paste your M-Pesa SMS here"
+        />
+        <button className="btn btn-primary" onClick={handleParse}>
           Parse SMS
         </button>
-      </form>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-      {transaction && (
-        <div className="card">
-          <div className="card-body">
-            <h5 className="card-title">Parsed Transaction</h5>
-            <p><strong>Transaction Code:</strong> {transaction.transactionCode}</p>
-            <p><strong>Type:</strong> {transaction.type}</p>
-            <p><strong>Amount:</strong> Ksh {transaction.amount.toFixed(2)}</p>
-            <p><strong>Sender:</strong> {transaction.sender}</p>
-            <p><strong>Date:</strong> {new Date(transaction.date).toLocaleString()}</p>
+        {parsedData && (
+          <div className="mt-3">
+            <h4>Parsed Result:</h4>
+            <pre>{JSON.stringify(parsedData, null, 2)}</pre>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
