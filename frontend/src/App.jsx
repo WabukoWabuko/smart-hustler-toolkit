@@ -35,6 +35,7 @@ function App() {
       });
       setParsedData(response.data);
       setError(null);
+      // Refresh transactions after parsing
       const transactionsResponse = await axios.get('http://localhost:3000/transactions');
       setTransactions(transactionsResponse.data);
     } catch (err) {
@@ -136,7 +137,7 @@ function App() {
               }}
             />
           </div>
-          <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+          <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Monthly Transactions</h3>
             <Line
               data={monthlyChartData}
@@ -145,6 +146,35 @@ function App() {
                 plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
               }}
             />
+          </div>
+          <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+            <h3>Transaction History</h3>
+            {transactions.length > 0 ? (
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Amount (Ksh)</th>
+                    <th>Sender</th>
+                    <th>Transaction Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transactions.map((tx) => (
+                    <tr key={tx.id}>
+                      <td>{new Date(tx.date).toLocaleDateString('en-GB')}</td>
+                      <td>{tx.type}</td>
+                      <td>{tx.amount.toFixed(2)}</td>
+                      <td>{tx.sender}</td>
+                      <td>{tx.transactionCode}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p>No transactions yet. Parse an SMS to add one!</p>
+            )}
           </div>
         </div>
       </div>
