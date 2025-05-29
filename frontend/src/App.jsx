@@ -13,6 +13,7 @@ function App() {
   const [parsedData, setParsedData] = useState(null);
   const [error, setError] = useState(null);
   const [transactions, setTransactions] = useState([]);
+  const [darkMode, setDarkMode] = useState(false);
 
   // Fetch transactions on mount
   useEffect(() => {
@@ -34,7 +35,6 @@ function App() {
       });
       setParsedData(response.data);
       setError(null);
-      // Refresh transactions after parsing
       const transactionsResponse = await axios.get('http://localhost:3000/transactions');
       setTransactions(transactionsResponse.data);
     } catch (err) {
@@ -42,6 +42,13 @@ function App() {
       setError(err.message);
       setParsedData(null);
     }
+  };
+
+  // Toggle dark mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.body.classList.toggle('bg-dark');
+    document.body.classList.toggle('text-white');
   };
 
   // Prepare data for daily chart
@@ -57,7 +64,7 @@ function App() {
         label: 'Daily Transactions (Ksh)',
         data: Object.values(dailyData),
         borderColor: '#007bff',
-        backgroundColor: 'rgba(0, 123, 255, 0.2)',
+        backgroundColor: darkMode ? 'rgba(0, 123, 255, 0.4)' : 'rgba(0, 123, 255, 0.2)',
         fill: true,
       },
     ],
@@ -76,18 +83,23 @@ function App() {
         label: 'Monthly Transactions (Ksh)',
         data: Object.values(monthlyData),
         borderColor: '#28a745',
-        backgroundColor: 'rgba(40, 167, 69, 0.2)',
+        backgroundColor: darkMode ? 'rgba(40, 167, 69, 0.4)' : 'rgba(40, 167, 69, 0.2)',
         fill: true,
       },
     ],
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center mb-4">Smart Hustler Toolkit</h1>
+    <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : ''}`}>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1>Smart Hustler Toolkit</h1>
+        <button className="btn btn-secondary" onClick={toggleDarkMode}>
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
+      </div>
       <div className="row">
         <div className="col-md-6">
-          <div className="card p-4 mb-4">
+          <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Paste M-Pesa SMS</h3>
             <textarea
               className="form-control mb-3"
@@ -102,7 +114,7 @@ function App() {
             {parsedData && (
               <div className="mt-3">
                 <h4>Parsed Result:</h4>
-                <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+                <pre className={darkMode ? 'bg-dark text-white' : ''}>{JSON.stringify(parsedData, null, 2)}</pre>
               </div>
             )}
             {error && (
@@ -114,7 +126,7 @@ function App() {
           </div>
         </div>
         <div className="col-md-6">
-          <div className="card p-4 mb-4">
+          <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Daily Transactions</h3>
             <Line
               data={dailyChartData}
@@ -124,7 +136,7 @@ function App() {
               }}
             />
           </div>
-          <div className="card p-4">
+          <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
             <h3>Monthly Transactions</h3>
             <Line
               data={monthlyChartData}

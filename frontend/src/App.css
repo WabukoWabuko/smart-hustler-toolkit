@@ -1,26 +1,42 @@
 body {
-  background-color: #f8f9fa; /* Light gray background for contrast */
+  background-color: #f8f9fa;
+}
+
+body.bg-dark {
+  background-color: #343a40;
 }
 
 .card {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.card.bg-secondary {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 h1, h3 {
-  color: #343a40; /* Dark text for readability */
+  color: #343a40;
+}
+
+.text-white h1, .text-white h3 {
+  color: #ffffff;
 }
 
 pre {
-  background-color: #e9ecef; /* Light background for code blocks */
+  background-color: #e9ecef;
   padding: 10px;
   border-radius: 5px;
 }
 
+pre.bg-dark {
+  background-color: #495057;
+}
+
 .btn-primary {
-  transition: background-color 0.3s; /* Smooth hover effect */
+  transition: background-color 0.3s;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
