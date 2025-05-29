@@ -1,5 +1,7 @@
 body {
   background-color: #f8f9fa;
+  margin: 0; /* Remove default margins to fill screen */
+  padding: 0;
 }
 
 body.bg-dark {
@@ -64,12 +66,18 @@ pre.bg-dark {
 
 .chart-container {
   position: relative;
-  height: 400px; /* Match the height set in App.jsx */
   width: 100%;
-  overflow: hidden; /* Prevent content from overflowing */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden;
 }
 
-/* Auth Page Styles */
+.chart-section {
+  height: 100vh; /* Ensure the section fills the viewport */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 .auth-page {
   background: linear-gradient(135deg, #e6f0fa 0%, #f8f9fa 100%);
 }

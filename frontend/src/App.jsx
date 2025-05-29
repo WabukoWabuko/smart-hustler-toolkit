@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import Login from './components/Login';
 import Register from './components/Register';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Fixed typo from .csv to .css
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -169,116 +169,113 @@ function App() {
   }
 
   return (
-    <div className={`container mt-5 ${darkMode ? 'bg-dark text-white' : ''} d-flex justify-content-center`}>
-      <div className="col-12 col-md-10">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h1>Smart Hustler Toolkit</h1>
-          <div>
-            <button className="btn btn-secondary me-2" onClick={toggleDarkMode}>
-              {darkMode ? 'Light Mode' : 'Dark Mode'}
-            </button>
-            <button className="btn btn-danger" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-        </div>
-        {/* SMS Input Section */}
-        <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
-          <h3>Paste M-Pesa SMS</h3>
-          <textarea
-            className="form-control mb-3"
-            rows="4"
-            value={smsInput}
-            onChange={(e) => setSmsInput(e.target.value)}
-            placeholder="Paste your M-Pesa SMS here"
-          />
-          <button className="btn btn-primary" onClick={handleParse}>
-            Parse SMS
+    <div className={`container-fluid ${darkMode ? 'bg-dark text-white' : ''}`}>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1>Smart Hustler Toolkit</h1>
+        <div>
+          <button className="btn btn-secondary me-2" onClick={toggleDarkMode}>
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
           </button>
-          {parsedData && (
-            <div className="mt-3">
-              <h4>Parsed Result:</h4>
-              <pre className={darkMode ? 'bg-dark text-white' : ''}>{JSON.stringify(parsedData, null, 2)}</pre>
-            </div>
-          )}
-          {error && (
-            <div className="mt-3 text-danger">
-              <h4>Error:</h4>
-              <p>{error}</p>
-            </div>
-          )}
+          <button className="btn btn-danger" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
+      </div>
+      {/* SMS Input Section */}
+      <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
+        <h3>Paste M-Pesa SMS</h3>
+        <textarea
+          className="form-control mb-3"
+          rows="4"
+          value={smsInput}
+          onChange={(e) => setSmsInput(e.target.value)}
+          placeholder="Paste your M-Pesa SMS here"
+        />
+        <button className="btn btn-primary" onClick={handleParse}>
+          Parse SMS
+        </button>
+        {parsedData && (
+          <div className="mt-3">
+            <h4>Parsed Result:</h4>
+            <pre className={darkMode ? 'bg-dark text-white' : ''}>{JSON.stringify(parsedData, null, 2)}</pre>
+          </div>
+        )}
+        {error && (
+          <div className="mt-3 text-danger">
+            <h4>Error:</h4>
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
 
-        {/* Charts Section */}
-        <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
-          <h3>Transaction Charts</h3>
-          <div className="row g-0">
-            <div className="col-12 col-md-6">
-              <div className="chart-container">
-                <Line
-                  data={dailyChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
-                  }}
-                  height={400}
-                />
-              </div>
+      {/* Charts Section */}
+      <div className={`chart-section ${darkMode ? 'bg-secondary text-white' : ''} p-0`}>
+        <div className="row g-0">
+          <div className="col-12 col-md-6 p-0">
+            <div className="chart-container h-100">
+              <Line
+                data={dailyChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
+                }}
+                height="100%"
+              />
             </div>
-            <div className="col-12 col-md-6">
-              <div className="chart-container">
-                <Line
-                  data={monthlyChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
-                  }}
-                  height={400}
-                />
-              </div>
+          </div>
+          <div className="col-12 col-md-6 p-0">
+            <div className="chart-container h-100">
+              <Line
+                data={monthlyChartData}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
+                }}
+                height="100%"
+              />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Transaction History Section */}
-        <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''} text-center`}>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3>Transaction History</h3>
-            <button className="btn btn-success" onClick={exportCSV}>
-              Export CSV
-            </button>
-          </div>
-          {transactions.length > 0 ? (
-            <div className="table-responsive mx-auto" style={{ maxWidth: '800px' }}>
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Amount (Ksh)</th>
-                    <th>Sender</th>
-                    <th>Transaction Code</th>
+      {/* Transaction History Section */}
+      <div className={`card p-4 mt-4 ${darkMode ? 'bg-secondary text-white' : ''} text-center`}>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h3>Transaction History</h3>
+          <button className="btn btn-success" onClick={exportCSV}>
+            Export CSV
+          </button>
+        </div>
+        {transactions.length > 0 ? (
+          <div className="table-responsive mx-auto" style={{ maxWidth: '800px' }}>
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Amount (Ksh)</th>
+                  <th>Sender</th>
+                  <th>Transaction Code</th>
+                </tr>
+              </thead>
+              <tbody>
+                {transactions.map((tx) => (
+                  <tr key={tx.id}>
+                    <td>{new Date(tx.date).toLocaleDateString('en-GB')}</td>
+                    <td>{tx.type}</td>
+                    <td>{tx.amount.toFixed(2)}</td>
+                    <td>{tx.sender}</td>
+                    <td>{tx.transactionCode}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {transactions.map((tx) => (
-                    <tr key={tx.id}>
-                      <td>{new Date(tx.date).toLocaleDateString('en-GB')}</td>
-                      <td>{tx.type}</td>
-                      <td>{tx.amount.toFixed(2)}</td>
-                      <td>{tx.sender}</td>
-                      <td>{tx.transactionCode}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <p>No transactions yet. Parse an SMS to add one!</p>
-          )}
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p>No transactions yet. Parse an SMS to add one!</p>
+        )}
       </div>
     </div>
   );
