@@ -112,22 +112,35 @@ function App() {
     return (
       <div className={`auth-page ${darkMode ? 'bg-dark text-white' : 'bg-light'}`}>
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
-          <div className="auth-wrapper">
-            {showRegister ? (
-              <Register setToken={setToken} setShowRegister={setShowRegister} />
-            ) : (
-              <div>
-                <Login setToken={setToken} />
-                <div className="text-center mt-4">
-                  <p className="mb-0">
-                    Don't have an account?{' '}
-                    <button className="btn btn-link p-0 auth-link" onClick={() => setShowRegister(true)}>
-                      Register here
-                    </button>
-                  </p>
+          <div className="row w-100">
+            <div className="col-12 col-md-6 auth-wrapper">
+              {showRegister ? (
+                <Register setToken={setToken} setShowRegister={setShowRegister} />
+              ) : (
+                <div>
+                  <Login setToken={setToken} />
+                  <div className="text-center mt-4">
+                    <p className="mb-0">
+                      Don't have an account?{' '}
+                      <button className="btn btn-link p-0 auth-link" onClick={() => setShowRegister(true)}>
+                        Register here
+                      </button>
+                    </p>
+                  </div>
                 </div>
+              )}
+            </div>
+            <div className="col-12 col-md-6 auth-info">
+              <div className="auth-info-content">
+                <h2>About Smart Hustler Toolkit</h2>
+                <p>
+                  Smart Hustler Toolkit is designed for Kenyan freelancers to effortlessly manage their finances. Parse M-Pesa SMS messages to track income and expenses, visualize trends with interactive charts, and maintain a detailed transaction history—all in one place!
+                </p>
+                <p>
+                  Stay on top of your hustle with real-time insights and a user-friendly interface. Start today and take control of your financial journey!
+                </p>
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
