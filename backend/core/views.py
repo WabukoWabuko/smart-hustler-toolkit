@@ -1,17 +1,55 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import AllowAny
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from weasyprint import HTML
 from .utils import parse_mpesa_sms
 from .models import Transaction, Invoice, TaxReport
-from .serializers import TransactionSerializer, InvoiceSerializer, TaxReportSerializer
+from .serializers import TransactionSerializer, InvoiceSerializer, TaxReportSerializer, RegisterSerializer, UserSerializer
 from django.db.models import Sum
 from datetime import datetime
+from rest_framework_simplejwt.tokens import RefreshToken
+
+# Register user
+class RegisterAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': UserSerializer(user).data
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Login user
+class LoginAPIView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        from django.contrib.auth import authenticate
+        user = authenticate(username=username, password=password)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'user': UserSerializer(user).data
+            }, status=status.HTTP_200_OK)
+        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Test endpoint
 class TestAPIView(APIView):
+    permission_classes = [AllowAny]
+
     def get(self, request):
         return Response({"message": "Yo, Django is up and running!"}, status=status.HTTP_200_OK)
 
@@ -26,6 +64,7 @@ class ParseSMSAPIView(APIView):
         if not parsed_data:
             return Response({"error": "Invalid M-Pesa SMS format"}, status=status.HTTP_400_BAD_REQUEST)
         
+        parsed_data['user'] = request.user
         serializer = TransactionSerializer(data=parsed_data)
         if serializer.is_valid():
             serializer.save()
@@ -35,7 +74,7 @@ class ParseSMSAPIView(APIView):
 # Fetch transactions
 class TransactionListAPIView(APIView):
     def get(self, request):
-        transactions = Transaction.objects.all()
+        transactions = Transaction.objects.filter(user=request.user)
         category_id = request.query_params.get('category_id')
         if category_id:
             transactions = transactions.filter(category_id=category_id)
@@ -52,12 +91,14 @@ class TransactionListAPIView(APIView):
 # Create and fetch invoices
 class InvoiceAPIView(APIView):
     def get(self, request):
-        invoices = Invoice.objects.all()
+        invoices = Invoice.objects.filter(user=request.user)
         serializer = InvoiceSerializer(invoices, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = InvoiceSerializer(data=request.data)
+        data = request.data.copy()
+        data['user'] = request.user.id
+        serializer = InvoiceSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -67,7 +108,7 @@ class InvoiceAPIView(APIView):
 class InvoicePDFAPIView(APIView):
     def get(self, request, invoice_id):
         try:
-            invoice = Invoice.objects.get(id=invoice_id)
+            invoice = Invoice.objects.get(id=invoice_id, user=request.user)
         except Invoice.DoesNotExist:
             return Response({"error": "Invoice not found"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -90,7 +131,7 @@ class InvoicePDFAPIView(APIView):
 # Create and fetch tax reports
 class TaxReportAPIView(APIView):
     def get(self, request):
-        reports = TaxReport.objects.all()
+        reports = TaxReport.objects.filter(user=request.user)
         serializer = TaxReportSerializer(reports, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -106,7 +147,7 @@ class TaxReportAPIView(APIView):
         except ValueError:
             return Response({"error": "Invalid date format (use YYYY-MM-DD)"}, status=status.HTTP_400_BAD_REQUEST)
         
-        transactions = Transaction.objects.filter(date__range=[start_date, end_date])
+        transactions = Transaction.objects.filter(user=request.user, date__range=[start_date, end_date])
         total_income = transactions.aggregate(Sum('amount'))['amount__sum'] or 0
         tax_estimate = total_income * 0.03  # 3% turnover tax
         
@@ -114,7 +155,8 @@ class TaxReportAPIView(APIView):
             period_start=start_date,
             period_end=end_date,
             total_income=total_income,
-            tax_estimate=tax_estimate
+            tax_estimate=tax_estimate,
+            user=request.user
         )
         serializer = TaxReportSerializer(report)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -123,7 +165,7 @@ class TaxReportAPIView(APIView):
 class TaxReportPDFAPIView(APIView):
     def get(self, request, report_id):
         try:
-            report = TaxReport.objects.get(id=report_id)
+            report = TaxReport.objects.get(id=report_id, user=request.user)
         except TaxReport.DoesNotExist:
             return Response({"error": "Tax report not found"}, status=status.HTTP_404_NOT_FOUND)
         
