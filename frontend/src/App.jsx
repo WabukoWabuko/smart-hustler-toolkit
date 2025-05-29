@@ -1,14 +1,24 @@
 import { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [smsInput, setSmsInput] = useState('');
   const [parsedData, setParsedData] = useState(null);
+  const [error, setError] = useState(null);
 
-  const handleParse = () => {
-    // Placeholder for SMS parsing logic
-    setParsedData({ message: 'Parsing not implemented yet!' });
+  const handleParse = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/transactions/parse', {
+        sms: smsInput,
+      });
+      setParsedData(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      setParsedData(null);
+    }
   };
 
   return (
@@ -30,6 +40,12 @@ function App() {
           <div className="mt-3">
             <h4>Parsed Result:</h4>
             <pre>{JSON.stringify(parsedData, null, 2)}</pre>
+          </div>
+        )}
+        {error && (
+          <div className="mt-3 text-danger">
+            <h4>Error:</h4>
+            <p>{error}</p>
           </div>
         )}
       </div>
