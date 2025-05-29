@@ -178,29 +178,33 @@ function App() {
             <div className="col-12 col-lg-6">
               <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
                 <h3>Daily Transactions</h3>
-                <Line
-                  data={dailyChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
-                  }}
-                  height={300}
-                />
+                <div className="chart-container">
+                  <Line
+                    data={dailyChartData}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: { legend: { position: 'top' }, title: { display: true, text: 'Daily Transaction Trends' } },
+                    }}
+                    height={300}
+                  />
+                </div>
               </div>
             </div>
             <div className="col-12 col-lg-6">
               <div className={`card p-4 mb-4 ${darkMode ? 'bg-secondary text-white' : ''}`}>
                 <h3>Monthly Transactions</h3>
-                <Line
-                  data={monthlyChartData}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
-                  }}
-                  height={300}
-                />
+                <div className="chart-container">
+                  <Line
+                    data={monthlyChartData}
+                    options={{
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Transaction Trends' } },
+                    }}
+                    height={300}
+                  />
+                </div>
               </div>
             </div>
           </div>
