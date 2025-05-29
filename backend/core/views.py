@@ -5,7 +5,7 @@ from .utils import parse_mpesa_sms
 from .models import Transaction
 from .serializers import TransactionSerializer
 
-# Test endpoint from Phase 1
+# Test endpoint
 class TestAPIView(APIView):
     def get(self, request):
         return Response({"message": "Yo, Django is up and running!"}, status=status.HTTP_200_OK)
@@ -26,3 +26,22 @@ class ParseSMSAPIView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Fetch transactions with filters
+class TransactionListAPIView(APIView):
+    def get(self, request):
+        transactions = Transaction.objects.all()
+        # Filter by category if provided
+        category_id = request.query_params.get('category_id')
+        if category_id:
+            transactions = transactions.filter(category_id=category_id)
+        # Filter by date range if provided
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+        if start_date:
+            transactions = transactions.filter(date__gte=start_date)
+        if end_date:
+            transactions = transactions.filter(date__lte=end_date)
+        
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

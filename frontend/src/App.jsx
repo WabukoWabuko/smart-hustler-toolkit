@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import SMSInputForm from './components/SMSInputForm';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    // Test the backend connection
+    // Test backend connection
     axios.get('http://localhost:8000/api/test/')
       .then(response => {
         setMessage(response.data.message);
@@ -24,6 +25,7 @@ function App() {
       <h1 className="text-center mb-4">Smart Hustler Toolkit</h1>
       <p className="text-center">Backend says: {message}</p>
       <SMSInputForm />
+      <Dashboard />
     </div>
   );
 }
