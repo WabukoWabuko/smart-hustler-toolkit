@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert } from 'bootstrap';
+import { Form, Button, Alert } from 'react-bootstrap'; // Fixed import
 
 function SMSInputForm() {
   const [smsText, setSmsText] = useState('');

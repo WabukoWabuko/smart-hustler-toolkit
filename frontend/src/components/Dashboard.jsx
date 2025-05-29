@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tabs, Tab, Card, Form } from 'bootstrap';
+import { Tabs, Tab, Card } from 'react-bootstrap'; // Fixed import
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -16,7 +16,6 @@ function Dashboard() {
     axios.get('http://localhost:8000/api/transactions/')
       .then(response => {
         setTransactions(response.data);
-        // Extract unique categories
         const uniqueCategories = [...new Set(response.data.map(t => t.category?.name))].filter(Boolean);
         setCategories(uniqueCategories);
       })
