@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import Login from './components/Login';
 import Register from './components/Register';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.csv';
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -68,6 +68,27 @@ function App() {
     setTransactions([]);
     setParsedData(null);
     setError(null);
+  };
+
+  const exportCSV = async () => {
+    try {
+      const userId = 1; // Replace with dynamic user ID from token if needed
+      const response = await axios.get(`http://localhost:3000/transactions/export/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob',
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'transactions.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error exporting CSV:', err);
+      setError('Failed to export CSV');
+    }
   };
 
   // Prepare data for daily chart
@@ -223,7 +244,12 @@ function App() {
 
         {/* Transaction History Section */}
         <div className={`card p-4 ${darkMode ? 'bg-secondary text-white' : ''} text-center`}>
-          <h3>Transaction History</h3>
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h3>Transaction History</h3>
+            <button className="btn btn-success" onClick={exportCSV}>
+              Export CSV
+            </button>
+          </div>
           {transactions.length > 0 ? (
             <div className="table-responsive mx-auto" style={{ maxWidth: '800px' }}>
               <table className="table table-striped">
