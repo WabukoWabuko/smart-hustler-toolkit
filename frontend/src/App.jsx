@@ -7,12 +7,14 @@ import InvoiceForm from './components/InvoiceForm';
 import TaxReportForm from './components/TaxReportForm';
 import './App.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+
 function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     // Test backend connection
-    axios.get('http://localhost:8000/api/test/')
+    axios.get(`${API_BASE_URL}/api/test/`)
       .then(response => {
         setMessage(response.data.message);
       })
