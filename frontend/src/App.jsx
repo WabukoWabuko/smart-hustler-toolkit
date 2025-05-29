@@ -16,6 +16,7 @@ function App() {
       setParsedData(response.data);
       setError(null);
     } catch (err) {
+      console.error('Axios Error:', err); // Log detailed error
       setError(err.message);
       setParsedData(null);
     }
