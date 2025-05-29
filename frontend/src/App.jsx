@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import Login from './components/Login';
 import Register from './components/Register';
 import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.csv';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Fixed typo from .csv to .css
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
